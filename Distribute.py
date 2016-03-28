@@ -2,10 +2,15 @@ from xlrd import open_workbook
 import win32com.client as win32
 import sys
 import re
+"""
+The bcc field will add everyone to the BCC field in the e-mail
+on_behalf will use this e-mail if you are allowed to send from it
+# of e-mails sent will be total recipients divided by max_recipients
+"""
+bcc = True
+on_behalf = ''
+max_recipients = 375
 
-
-max_recipients = 300  # This will limit the number of people a single message is sent to.
-                      # A value of 2 for 100 recipients means 50 e-mails will be sent.
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -31,8 +36,14 @@ email_wb = [file for file in sys.argv[1:] if file.endswith("xls") or file.endswi
 email_strings = read_excel_list()
 print(email_strings)
 
-outlook = win32.Dispatch('outlook.application')
-for recipients in email_strings:
+for emails in email_strings:
+    outlook = win32.Dispatch('outlook.application')
     item = outlook.CreateItemFromTemplate(template)
-    item.To = recipients
+    item.Importance = 2
+    if re.search(r"@*?\.com", on_behalf) is not None:
+        item.SentOnBehalfOfName = on_behalf
+    if bcc is True:
+        item.BCC = emails
+    else:
+        item.To = emails
     item.Send()
