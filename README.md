@@ -3,9 +3,6 @@ Script will divide up e-mails to avoid message size limits on an exchange server
 
 Prerequisites:
 Python 3      - https://www.python.org/downloads/release/python-351/
-  
-Once Python is installed:
-  
 xlrd module   -  https://pypi.python.org/pypi/xlrd
 pywin32       - https://sourceforge.net/projects/pywin32/files/pywin32/Build%20220/
 
